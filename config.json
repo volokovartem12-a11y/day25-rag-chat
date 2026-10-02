@@ -1,0 +1,14 @@
+{
+  "thresholds": {
+    "local": {
+      "min_score": 0.099,
+      "rel_ratio": 0.45,
+      "answer_min": 0.1315
+    },
+    "aitunnel": {
+      "min_score": 0.453,
+      "rel_ratio": 0.3,
+      "answer_min": 0.4535
+    }
+  }
+}

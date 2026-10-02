@@ -1,0 +1,72 @@
+{
+  "description": "Два длинных сценария. goal_keywords — слова, которые должны оставаться в цели после КАЖДОГО хода. Для хода: type — ожидаемый тип реплики; sources — подстроки путей, хотя бы одна должна быть среди источников ответа; status — answered или unknown; state_has / answer_has — группы вариантов, каждая группа должна найтись в памяти задачи / в ответе.",
+  "scenarios": [
+    {
+      "id": "context",
+      "title": "Выбор подхода к управлению контекстом (дни 9–11)",
+      "goal_keywords": [["контекст"]],
+      "turns": [
+        {"user": "Я выбираю подход к управлению контекстом для чат-бота поддержки. Цель — сравнить варианты из челленджа и выбрать один.",
+         "type": "statement", "state_has": [["контекст"]]},
+        {"user": "Ограничение: бюджет на токены жёсткий, решение должно экономить токены.",
+         "type": "statement", "state_has": [["токен"]]},
+        {"user": "Что дало сжатие истории в проекте дня 9?",
+         "type": "kb", "status": "answered", "sources": ["day9-context-compression/"]},
+        {"user": "А какие стратегии пробовали в дне 10?",
+         "type": "kb", "status": "answered", "sources": ["day10-context-strategies/"]},
+        {"user": "Договоримся: под «фактами» я понимаю Sticky Facts из дня 10.",
+         "type": "statement", "state_has": [["sticky", "факт"]]},
+        {"user": "Как в этом подходе обновляются факты?",
+         "type": "kb", "status": "answered", "sources": ["day10-context-strategies/"]},
+        {"user": "А в проекте дня 11 какие слои памяти?",
+         "type": "kb", "status": "answered", "sources": ["day11-memory-layers/"]},
+        {"user": "Где там хранится долговременная?",
+         "type": "kb", "status": "answered", "sources": ["day11-memory-layers/"]},
+        {"user": "Напомни, какая у нас цель и какие ограничения?",
+         "type": "memory", "status": "answered", "answer_has": [["контекст"], ["токен"]]},
+        {"user": "Какой из рассмотренных подходов лучше подходит под моё ограничение по токенам?",
+         "type": "kb", "status": "answered",
+         "sources": ["day9-context-compression/", "day10-context-strategies/", "day11-memory-layers/"]},
+        {"user": "А сколько там было токенов до и после сжатия?",
+         "type": "kb", "status": "answered", "sources": ["day9-context-compression/"]},
+        {"user": "Подведи итог для коллеги в 3 пунктах с источниками.",
+         "type": "kb", "status": "answered",
+         "sources": ["day9-context-compression/", "day10-context-strategies/", "day11-memory-layers/"]}
+      ]
+    },
+    {
+      "id": "mcp",
+      "title": "План собственного MCP-сервера (дни 16–20)",
+      "goal_keywords": [["mcp"]],
+      "turns": [
+        {"user": "Цель: разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа.",
+         "type": "statement", "state_has": [["mcp"]]},
+        {"user": "С чего начать: как подключиться к готовому MCP-серверу и получить список инструментов?",
+         "type": "kb", "status": "answered", "sources": ["day16-mcp-connect/", "day17-mcp-tool/", "day19-mcp-pipeline/", "day20-mcp-orchestration/"]},
+        {"user": "Почему в проекте дня 16 у DeepWiki не работал старый адрес?",
+         "type": "kb", "status": "answered", "sources": ["day16-mcp-connect/"]},
+        {"user": "Ограничение: по возможности без SDK — хочу понимать сам протокол.",
+         "type": "statement", "state_has": [["sdk"]]},
+        {"user": "Есть ли в проектах клиент без SDK?",
+         "type": "kb", "status": "answered", "sources": ["day16-mcp-connect/"]},
+        {"user": "Теперь как зарегистрировать свой инструмент на сервере?",
+         "type": "kb", "status": "answered", "sources": ["mcp_server.py", "_server.py"]},
+        {"user": "Термин: «инструмент» — это MCP tool с JSON Schema параметров.",
+         "type": "statement", "state_has": [["инструмент"]]},
+        {"user": "Какие инструменты были в CRM-сервере из дня 17?",
+         "type": "kb", "status": "answered", "sources": ["day17-mcp-tool/"]},
+        {"user": "Как связать несколько инструментов в цепочку?",
+         "type": "kb", "status": "answered", "sources": ["day19-mcp-pipeline/"]},
+        {"user": "А если серверов несколько и у инструментов одинаковые имена?",
+         "type": "kb", "status": "answered", "sources": ["day20-mcp-orchestration/"]},
+        {"user": "Мы не ушли от цели? Напомни цель и что уже выяснили.",
+         "type": "memory", "status": "answered", "answer_has": [["mcp"]]},
+        {"user": "Какой рецепт борща?",
+         "type": "offtopic", "status": "unknown"},
+        {"user": "Ок, вернёмся. Составь план из 4 шагов для моего MCP-сервера с источниками.",
+         "type": "kb", "status": "answered",
+         "sources": ["day16-mcp-connect/", "day17-mcp-tool/", "day19-mcp-pipeline/", "day20-mcp-orchestration/"]}
+      ]
+    }
+  ]
+}

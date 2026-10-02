@@ -1,0 +1,933 @@
+{
+  "saved": "2026-10-02T21:16:58",
+  "state": {
+    "goal": "цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки",
+    "constraints": [
+      "Бюджет на токены жёсткий; решение должно экономить токены",
+      "Подвести итог для коллеги ровно в 3 пунктах",
+      "Указать источники"
+    ],
+    "terms": {
+      "факты": "Sticky Facts из дня 10"
+    },
+    "clarified": [],
+    "focus_days": [
+      11
+    ],
+    "goal_history": [],
+    "rejected_goal_changes": 0
+  },
+  "history": [
+    {
+      "role": "user",
+      "content": "Я выбираю подход к управлению контекстом для чат-бота поддержки. Цель — сравнить варианты из челленджа и выбрать один."
+    },
+    {
+      "role": "assistant",
+      "content": "Зафиксировал в памяти задачи — цель: «цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки». Задавайте вопрос — отвечу по базе с источниками."
+    },
+    {
+      "role": "user",
+      "content": "Ограничение: бюджет на токены жёсткий, решение должно экономить токены."
+    },
+    {
+      "role": "assistant",
+      "content": "Зафиксировал в памяти задачи — ограничение: «Бюджет на токены жёсткий; решение должно экономить токены». Задавайте вопрос — отвечу по базе с источниками."
+    },
+    {
+      "role": "user",
+      "content": "Что дало сжатие истории в проекте дня 9?"
+    },
+    {
+      "role": "assistant",
+      "content": "Не знаю"
+    },
+    {
+      "role": "user",
+      "content": "А какие стратегии пробовали в дне 10?"
+    },
+    {
+      "role": "assistant",
+      "content": "В день 10 пробовали три стратегии: SlidingWindowStrategy, FactsStrategy и BranchingStrategy [1]."
+    },
+    {
+      "role": "user",
+      "content": "Договоримся: под «фактами» я понимаю Sticky Facts из дня 10."
+    },
+    {
+      "role": "assistant",
+      "content": "Зафиксировал в памяти задачи — термин «факты» = Sticky Facts из дня 10. Задавайте вопрос — отвечу по базе с источниками."
+    },
+    {
+      "role": "user",
+      "content": "Как в этом подходе обновляются факты?"
+    },
+    {
+      "role": "assistant",
+      "content": "В FactsStrategy факты обновляются при каждом сообщении пользователя: вызывается facts_updater с текущими фактами и сообщением, а непустые обновления добавляются в facts [1]. Если новых фактов нет, возвращается пустой объект [2]."
+    },
+    {
+      "role": "user",
+      "content": "А в проекте дня 11 какие слои памяти?"
+    },
+    {
+      "role": "assistant",
+      "content": "В проекте дня 11 используются три слоя памяти: `ShortTermMemory` — краткосрочная, `WorkingMemory` — рабочая и `LongTermMemory` — долговременная [4]."
+    },
+    {
+      "role": "user",
+      "content": "Где там хранится долговременная?"
+    },
+    {
+      "role": "assistant",
+      "content": "Долговременная память хранится в файле `memory_store.json` и переживает перезапуск [1][2]."
+    },
+    {
+      "role": "user",
+      "content": "Напомни, какая у нас цель и какие ограничения?"
+    },
+    {
+      "role": "assistant",
+      "content": "Цель: цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки\nОграничения: Бюджет на токены жёсткий; решение должно экономить токены\nТермины: «факты» = Sticky Facts из дня 10\nУже выяснили:\n  — Какие стратегии управления контекстом чат-бота поддержки пробовали в проекте челленджа в д\n  — Как в FactsStrategy дня 10 обновляются Sticky Facts (факты) для управления контекстом чат-\n  — Какие слои памяти используются в проекте дня 11 для управления контекстом чат-бота поддерж\n  — Где в проекте дня 11 хранится долговременная память (LongTermMemory)?"
+    },
+    {
+      "role": "user",
+      "content": "Какой из рассмотренных подходов лучше подходит под моё ограничение по токенам?"
+    },
+    {
+      "role": "assistant",
+      "content": "При жёстком бюджете лучше выбрать `SlidingWindowStrategy`, то есть режим A дня 11: он экономнее по токенам — `input` 1114 против 2370 у трёх слоёв с ручной раскладкой. Недостаток: всё за пределами окна забывается. `FactsStrategy` — компромисс: сохраняет важные данные и последние сообщения, но добавляет facts в запрос [2][5]."
+    },
+    {
+      "role": "user",
+      "content": "А сколько там было токенов до и после сжатия?"
+    },
+    {
+      "role": "assistant",
+      "content": "Не знаю"
+    },
+    {
+      "role": "user",
+      "content": "Подведи итог для коллеги в 3 пунктах с источниками."
+    },
+    {
+      "role": "assistant",
+      "content": "1. Режим A — только краткосрочная память с окном 4 реплики; режим B — три слоя с ручной раскладкой [3].\n2. В режиме A указано 52 токена краткосрочной памяти и input 1114; в режиме B — 53 краткосрочной, 56 рабочей, 59 долговременной и input 2370 [3]. Отдельных цифр «до/после сжатия» в данных нет.\n3. При жёстком бюджете токенов лучше выбрать режим A: режим B примерно вдвое дороже, хотя сохраняет начало диалога; компромисс режима A — забывание данных за пределами окна [3]."
+    }
+  ],
+  "turns": [
+    {
+      "n": 1,
+      "user": "Я выбираю подход к управлению контекстом для чат-бота поддержки. Цель — сравнить варианты из челленджа и выбрать один.",
+      "type": "statement",
+      "query": "Я выбираю подход к управлению контекстом для чат-бота поддержки; цель — сравнить варианты из челленджа и выбрать один.",
+      "status": "answered",
+      "reason": "",
+      "answer": "Зафиксировал в памяти задачи — цель: «цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки». Задавайте вопрос — отвечу по базе с источниками.",
+      "sources": [
+        {
+          "type": "memory",
+          "source": "память задачи",
+          "section": "обновлена этой репликой",
+          "chunk_id": "task_state"
+        }
+      ],
+      "quotes": [],
+      "clarification": "",
+      "state_changes": {
+        "goal": "цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки"
+      },
+      "usage": {
+        "prompt_tokens": 598,
+        "completion_tokens": 203
+      },
+      "attempts": 0,
+      "state": {
+        "goal": "цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки",
+        "constraints": [],
+        "terms": {},
+        "clarified": [],
+        "focus_days": [],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "type": true,
+        "state": true,
+        "goal_kept": true
+      },
+      "history_len": 2
+    },
+    {
+      "n": 2,
+      "user": "Ограничение: бюджет на токены жёсткий, решение должно экономить токены.",
+      "type": "statement",
+      "query": "Бюджет на токены жёсткий; решение по управлению контекстом чат-бота поддержки должно экономить токены.",
+      "status": "answered",
+      "reason": "",
+      "answer": "Зафиксировал в памяти задачи — ограничение: «Бюджет на токены жёсткий; решение должно экономить токены». Задавайте вопрос — отвечу по базе с источниками.",
+      "sources": [
+        {
+          "type": "memory",
+          "source": "память задачи",
+          "section": "обновлена этой репликой",
+          "chunk_id": "task_state"
+        }
+      ],
+      "quotes": [],
+      "clarification": "",
+      "state_changes": {
+        "constraints_add": [
+          "Бюджет на токены жёсткий; решение должно экономить токены"
+        ]
+      },
+      "usage": {
+        "prompt_tokens": 761,
+        "completion_tokens": 118
+      },
+      "attempts": 0,
+      "state": {
+        "goal": "цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки",
+        "constraints": [
+          "Бюджет на токены жёсткий; решение должно экономить токены"
+        ],
+        "terms": {},
+        "clarified": [],
+        "focus_days": [],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "type": true,
+        "state": true,
+        "goal_kept": true
+      },
+      "history_len": 4
+    },
+    {
+      "n": 3,
+      "user": "Что дало сжатие истории в проекте дня 9?",
+      "type": "kb",
+      "query": "Какой эффект дало сжатие истории в проекте дня 9 при управлении контекстом чат-бота поддержки?",
+      "status": "unknown",
+      "reason": "model",
+      "answer": "Не знаю",
+      "sources": [],
+      "quotes": [],
+      "clarification": "Что именно сравнить или определить по проекту дня 9?",
+      "state_changes": {
+        "focus_days": [
+          9
+        ]
+      },
+      "usage": {
+        "prompt_tokens": 2430,
+        "completion_tokens": 261
+      },
+      "attempts": 1,
+      "top_score": 0.5628,
+      "gate": 0.4535,
+      "retrieval": {
+        "candidates": 12,
+        "after_filter": 12,
+        "final": 4,
+        "day_filter": "day9-",
+        "dialog_scope": 0
+      },
+      "rejected_quotes": 0,
+      "state": {
+        "goal": "цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки",
+        "constraints": [
+          "Бюджет на токены жёсткий; решение должно экономить токены"
+        ],
+        "terms": {},
+        "clarified": [],
+        "focus_days": [
+          9
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "right_source": false,
+        "status": false,
+        "type": true,
+        "goal_kept": true
+      },
+      "history_len": 6
+    },
+    {
+      "n": 4,
+      "user": "А какие стратегии пробовали в дне 10?",
+      "type": "kb",
+      "query": "Какие стратегии управления контекстом чат-бота поддержки пробовали в проекте челленджа в день 10?",
+      "status": "answered",
+      "reason": "",
+      "answer": "В день 10 пробовали три стратегии: SlidingWindowStrategy, FactsStrategy и BranchingStrategy [1].",
+      "sources": [
+        {
+          "type": "kb",
+          "n": 1,
+          "source": "day10-context-strategies/context_strategies.py",
+          "section": "шапка модуля: docstring и импорты",
+          "chunk_id": "day10-context-strategies/context_strategies.py#structure-000",
+          "quoted": true
+        }
+      ],
+      "quotes": [
+        {
+          "n": 1,
+          "text": "1) SlidingWindowStrategy — храним только последние N сообщений, остальное отбрасываем.\n2) FactsStrategy         — отдельный блок \"facts\" (ключ-значение) с важными данными",
+          "source": "day10-context-strategies/context_strategies.py",
+          "section": "шапка модуля: docstring и импорты"
+        },
+        {
+          "n": 1,
+          "text": "3) BranchingStrategy     — дерево сообщений: можно поставить checkpoint, создать\n   от него несколько веток и вести их независимо, переключаясь между ветками.",
+          "source": "day10-context-strategies/context_strategies.py",
+          "section": "шапка модуля: docstring и импорты"
+        }
+      ],
+      "clarification": "",
+      "state_changes": {
+        "focus_days": [
+          10
+        ]
+      },
+      "usage": {
+        "prompt_tokens": 2492,
+        "completion_tokens": 374
+      },
+      "attempts": 1,
+      "top_score": 0.54,
+      "gate": 0.4535,
+      "retrieval": {
+        "candidates": 12,
+        "after_filter": 12,
+        "final": 4,
+        "day_filter": "day10-",
+        "dialog_scope": 0
+      },
+      "rejected_quotes": 0,
+      "state": {
+        "goal": "цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки",
+        "constraints": [
+          "Бюджет на токены жёсткий; решение должно экономить токены"
+        ],
+        "terms": {},
+        "clarified": [],
+        "focus_days": [
+          10
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "right_source": true,
+        "status": true,
+        "type": true,
+        "goal_kept": true
+      },
+      "history_len": 8
+    },
+    {
+      "n": 5,
+      "user": "Договоримся: под «фактами» я понимаю Sticky Facts из дня 10.",
+      "type": "statement",
+      "query": "Пользователь определил, что под «фактами» понимаются Sticky Facts из дня 10.",
+      "status": "answered",
+      "reason": "",
+      "answer": "Зафиксировал в памяти задачи — термин «факты» = Sticky Facts из дня 10. Задавайте вопрос — отвечу по базе с источниками.",
+      "sources": [
+        {
+          "type": "memory",
+          "source": "память задачи",
+          "section": "обновлена этой репликой",
+          "chunk_id": "task_state"
+        }
+      ],
+      "quotes": [],
+      "clarification": "",
+      "state_changes": {
+        "terms_add": {
+          "факты": "Sticky Facts из дня 10"
+        }
+      },
+      "usage": {
+        "prompt_tokens": 832,
+        "completion_tokens": 173
+      },
+      "attempts": 0,
+      "state": {
+        "goal": "цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки",
+        "constraints": [
+          "Бюджет на токены жёсткий; решение должно экономить токены"
+        ],
+        "terms": {
+          "факты": "Sticky Facts из дня 10"
+        },
+        "clarified": [],
+        "focus_days": [
+          10
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "type": true,
+        "state": true,
+        "goal_kept": true
+      },
+      "history_len": 10
+    },
+    {
+      "n": 6,
+      "user": "Как в этом подходе обновляются факты?",
+      "type": "kb",
+      "query": "Как в FactsStrategy дня 10 обновляются Sticky Facts (факты) для управления контекстом чат-бота поддержки?",
+      "status": "answered",
+      "reason": "",
+      "answer": "В FactsStrategy факты обновляются при каждом сообщении пользователя: вызывается facts_updater с текущими фактами и сообщением, а непустые обновления добавляются в facts [1]. Если новых фактов нет, возвращается пустой объект [2].",
+      "sources": [
+        {
+          "type": "kb",
+          "n": 1,
+          "source": "day10-context-strategies/context_strategies.py",
+          "section": "class FactsStrategy",
+          "chunk_id": "day10-context-strategies/context_strategies.py#structure-005",
+          "quoted": true
+        },
+        {
+          "type": "kb",
+          "n": 2,
+          "source": "day10-context-strategies/context_strategies.py",
+          "section": "константа DEFAULT_FACTS_PROMPT",
+          "chunk_id": "day10-context-strategies/context_strategies.py#structure-003",
+          "quoted": true
+        }
+      ],
+      "quotes": [
+        {
+          "n": 1,
+          "text": "if role == \"user\":\n            self._update_facts(content)",
+          "source": "day10-context-strategies/context_strategies.py",
+          "section": "class FactsStrategy"
+        },
+        {
+          "n": 1,
+          "text": "updates = self.facts_updater(self.facts, message)\n        self.facts_update_calls += 1\n        if updates:\n            self.facts.update(updates)",
+          "source": "day10-context-strategies/context_strategies.py",
+          "section": "class FactsStrategy"
+        },
+        {
+          "n": 2,
+          "text": "Если новых фактов нет — верни {{}}.",
+          "source": "day10-context-strategies/context_strategies.py",
+          "section": "константа DEFAULT_FACTS_PROMPT"
+        }
+      ],
+      "clarification": "",
+      "state_changes": {},
+      "usage": {
+        "prompt_tokens": 5336,
+        "completion_tokens": 998
+      },
+      "attempts": 2,
+      "top_score": 0.5841,
+      "gate": 0.4535,
+      "retrieval": {
+        "candidates": 12,
+        "after_filter": 12,
+        "final": 4,
+        "day_filter": "day10-",
+        "dialog_scope": 0
+      },
+      "rejected_quotes": 0,
+      "state": {
+        "goal": "цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки",
+        "constraints": [
+          "Бюджет на токены жёсткий; решение должно экономить токены"
+        ],
+        "terms": {
+          "факты": "Sticky Facts из дня 10"
+        },
+        "clarified": [],
+        "focus_days": [
+          10
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "right_source": true,
+        "status": true,
+        "type": true,
+        "goal_kept": true
+      },
+      "history_len": 12
+    },
+    {
+      "n": 7,
+      "user": "А в проекте дня 11 какие слои памяти?",
+      "type": "kb",
+      "query": "Какие слои памяти используются в проекте дня 11 для управления контекстом чат-бота поддержки?",
+      "status": "answered",
+      "reason": "",
+      "answer": "В проекте дня 11 используются три слоя памяти: `ShortTermMemory` — краткосрочная, `WorkingMemory` — рабочая и `LongTermMemory` — долговременная [4].",
+      "sources": [
+        {
+          "type": "kb",
+          "n": 4,
+          "source": "day11-memory-layers/memory_layers.py",
+          "section": "шапка модуля: docstring и импорты (часть 1/2)",
+          "chunk_id": "day11-memory-layers/memory_layers.py#structure-000",
+          "quoted": true
+        }
+      ],
+      "quotes": [
+        {
+          "n": 4,
+          "text": "1) ShortTermMemory — КРАТКОСРОЧНАЯ (текущий диалог)",
+          "source": "day11-memory-layers/memory_layers.py",
+          "section": "шапка модуля: docstring и импорты (часть 1/2)"
+        },
+        {
+          "n": 4,
+          "text": "2) WorkingMemory — РАБОЧАЯ (данные текущей задачи)",
+          "source": "day11-memory-layers/memory_layers.py",
+          "section": "шапка модуля: docstring и импорты (часть 1/2)"
+        },
+        {
+          "n": 4,
+          "text": "3) LongTermMemory — ДОЛГОВРЕМЕННАЯ (профиль, решения, знания)",
+          "source": "day11-memory-layers/memory_layers.py",
+          "section": "шапка модуля: docstring и импорты (часть 1/2)"
+        }
+      ],
+      "clarification": "",
+      "state_changes": {
+        "focus_days": [
+          11
+        ]
+      },
+      "usage": {
+        "prompt_tokens": 5320,
+        "completion_tokens": 818
+      },
+      "attempts": 2,
+      "top_score": 0.5687,
+      "gate": 0.4535,
+      "retrieval": {
+        "candidates": 12,
+        "after_filter": 12,
+        "final": 4,
+        "day_filter": "day11-",
+        "dialog_scope": 0
+      },
+      "rejected_quotes": 0,
+      "state": {
+        "goal": "цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки",
+        "constraints": [
+          "Бюджет на токены жёсткий; решение должно экономить токены"
+        ],
+        "terms": {
+          "факты": "Sticky Facts из дня 10"
+        },
+        "clarified": [],
+        "focus_days": [
+          11
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "right_source": true,
+        "status": true,
+        "type": true,
+        "goal_kept": true
+      },
+      "history_len": 14
+    },
+    {
+      "n": 8,
+      "user": "Где там хранится долговременная?",
+      "type": "kb",
+      "query": "Где в проекте дня 11 хранится долговременная память (LongTermMemory)?",
+      "status": "answered",
+      "reason": "",
+      "answer": "Долговременная память хранится в файле `memory_store.json` и переживает перезапуск [1][2].",
+      "sources": [
+        {
+          "type": "kb",
+          "n": 1,
+          "source": "day11-memory-layers/README.md",
+          "section": "День 11. Модель памяти агента (memory layers) > Описание модели памяти",
+          "chunk_id": "day11-memory-layers/README.md#structure-001",
+          "quoted": true
+        },
+        {
+          "type": "kb",
+          "n": 2,
+          "source": "day11-memory-layers/memory_layers.py",
+          "section": "шапка модуля: docstring и импорты (часть 1/2)",
+          "chunk_id": "day11-memory-layers/memory_layers.py#structure-000",
+          "quoted": true
+        }
+      ],
+      "quotes": [
+        {
+          "n": 1,
+          "text": "| **Долговременная** (`LongTermMemory`) | `profile` (кто пользователь), `decisions` (принятые решения), `knowledge` (факты о проекте) | постоянно, файл `memory_store.json` — переживает перезапуск |",
+          "source": "day11-memory-layers/README.md",
+          "section": "День 11. Модель памяти агента (memory layers) > Описание модели памяти"
+        },
+        {
+          "n": 2,
+          "text": "Время жизни: постоянно, переживает перезапуск (файл memory_store.json).",
+          "source": "day11-memory-layers/memory_layers.py",
+          "section": "шапка модуля: docstring и импорты (часть 1/2)"
+        }
+      ],
+      "clarification": "",
+      "state_changes": {},
+      "usage": {
+        "prompt_tokens": 3159,
+        "completion_tokens": 380
+      },
+      "attempts": 1,
+      "top_score": 0.5962,
+      "gate": 0.4535,
+      "retrieval": {
+        "candidates": 12,
+        "after_filter": 12,
+        "final": 4,
+        "day_filter": "day11-",
+        "dialog_scope": 0
+      },
+      "rejected_quotes": 0,
+      "state": {
+        "goal": "цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки",
+        "constraints": [
+          "Бюджет на токены жёсткий; решение должно экономить токены"
+        ],
+        "terms": {
+          "факты": "Sticky Facts из дня 10"
+        },
+        "clarified": [],
+        "focus_days": [
+          11
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "right_source": true,
+        "status": true,
+        "type": true,
+        "goal_kept": true
+      },
+      "history_len": 16
+    },
+    {
+      "n": 9,
+      "user": "Напомни, какая у нас цель и какие ограничения?",
+      "type": "memory",
+      "query": "Какая у нас цель диалога и какие установлены ограничения?",
+      "status": "answered",
+      "reason": "",
+      "answer": "Цель: цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки\nОграничения: Бюджет на токены жёсткий; решение должно экономить токены\nТермины: «факты» = Sticky Facts из дня 10\nУже выяснили:\n  — Какие стратегии управления контекстом чат-бота поддержки пробовали в проекте челленджа в д\n  — Как в FactsStrategy дня 10 обновляются Sticky Facts (факты) для управления контекстом чат-\n  — Какие слои памяти используются в проекте дня 11 для управления контекстом чат-бота поддерж\n  — Где в проекте дня 11 хранится долговременная память (LongTermMemory)?",
+      "sources": [
+        {
+          "type": "memory",
+          "source": "память задачи",
+          "section": "цель, ограничения, термины",
+          "chunk_id": "task_state"
+        },
+        {
+          "type": "history",
+          "source": "day10-context-strategies/context_strategies.py",
+          "section": "шапка модуля: docstring и импорты",
+          "chunk_id": "day10-context-strategies/context_strategies.py#structure-000",
+          "turn": 4
+        },
+        {
+          "type": "history",
+          "source": "day11-memory-layers/memory_layers.py",
+          "section": "шапка модуля: docstring и импорты (часть 1/2)",
+          "chunk_id": "day11-memory-layers/memory_layers.py#structure-000",
+          "turn": 7
+        },
+        {
+          "type": "history",
+          "source": "day11-memory-layers/README.md",
+          "section": "День 11. Модель памяти агента (memory layers) > Описание модели памяти",
+          "chunk_id": "day11-memory-layers/README.md#structure-001",
+          "turn": 8
+        }
+      ],
+      "quotes": [],
+      "clarification": "",
+      "state_changes": {},
+      "usage": {
+        "prompt_tokens": 893,
+        "completion_tokens": 96
+      },
+      "attempts": 0,
+      "state": {
+        "goal": "цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки",
+        "constraints": [
+          "Бюджет на токены жёсткий; решение должно экономить токены"
+        ],
+        "terms": {
+          "факты": "Sticky Facts из дня 10"
+        },
+        "clarified": [],
+        "focus_days": [
+          11
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "status": true,
+        "type": true,
+        "answer": true,
+        "goal_kept": true
+      },
+      "history_len": 18
+    },
+    {
+      "n": 10,
+      "user": "Какой из рассмотренных подходов лучше подходит под моё ограничение по токенам?",
+      "type": "kb",
+      "query": "Сравни рассмотренные в челлендже подходы управления контекстом чат-бота поддержки, включая подходы проекта дня 11 и FactsStrategy со Sticky Facts из дня 10, и определи, какой из них лучше подходит при жёстком ограничении бюджета на токены и максимально экономит токены.",
+      "status": "answered",
+      "reason": "",
+      "answer": "При жёстком бюджете лучше выбрать `SlidingWindowStrategy`, то есть режим A дня 11: он экономнее по токенам — `input` 1114 против 2370 у трёх слоёв с ручной раскладкой. Недостаток: всё за пределами окна забывается. `FactsStrategy` — компромисс: сохраняет важные данные и последние сообщения, но добавляет facts в запрос [2][5].",
+      "sources": [
+        {
+          "type": "kb",
+          "n": 2,
+          "source": "day11-memory-layers/README.md",
+          "section": "День 11. Модель памяти агента (memory layers) > Проверка: как слои влияют на ответы",
+          "chunk_id": "day11-memory-layers/README.md#structure-005",
+          "quoted": true
+        },
+        {
+          "type": "kb",
+          "n": 5,
+          "source": "day10-context-strategies/context_strategies.py",
+          "section": "шапка модуля: docstring и импорты",
+          "chunk_id": "day10-context-strategies/context_strategies.py#structure-000",
+          "quoted": true
+        }
+      ],
+      "quotes": [
+        {
+          "n": 2,
+          "text": "- **A. Только краткосрочная** (окно 4 реплики) — всё, что вышло за окно, забыто.",
+          "source": "day11-memory-layers/README.md",
+          "section": "День 11. Модель памяти агента (memory layers) > Проверка: как слои влияют на ответы"
+        },
+        {
+          "n": 2,
+          "text": "| A. Только краткосрочная | 52 | 0 | 0 | 1114 |\n| B. Три слоя, ручная раскладка | 53 | 56 | 59 | 2370 |",
+          "source": "day11-memory-layers/README.md",
+          "section": "День 11. Модель памяти агента (memory layers) > Проверка: как слои влияют на ответы"
+        },
+        {
+          "n": 2,
+          "text": "Видно главный компромисс: режим B дороже по токенам (~2х), потому что тащит в\nкаждый запрос блоки рабочей и долговременной памяти",
+          "source": "day11-memory-layers/README.md",
+          "section": "День 11. Модель памяти агента (memory layers) > Проверка: как слои влияют на ответы"
+        },
+        {
+          "n": 5,
+          "text": "в запрос уходит facts + последние N сообщений.",
+          "source": "day10-context-strategies/context_strategies.py",
+          "section": "шапка модуля: docstring и импорты"
+        }
+      ],
+      "clarification": "",
+      "state_changes": {},
+      "usage": {
+        "prompt_tokens": 7427,
+        "completion_tokens": 1295
+      },
+      "attempts": 2,
+      "top_score": 0.5639,
+      "gate": 0.4535,
+      "weak_context": false,
+      "retrieval": {
+        "candidates": 12,
+        "after_filter": 12,
+        "final": 6,
+        "day_filter": "day11-",
+        "dialog_scope": 3
+      },
+      "rejected_quotes": 0,
+      "state": {
+        "goal": "цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки",
+        "constraints": [
+          "Бюджет на токены жёсткий; решение должно экономить токены"
+        ],
+        "terms": {
+          "факты": "Sticky Facts из дня 10"
+        },
+        "clarified": [],
+        "focus_days": [
+          11
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "right_source": true,
+        "status": true,
+        "type": true,
+        "goal_kept": true
+      },
+      "history_len": 20
+    },
+    {
+      "n": 11,
+      "user": "А сколько там было токенов до и после сжатия?",
+      "type": "kb",
+      "query": "В челлендже по управлению контекстом чат-бота поддержки, день 11: сколько токенов было до и после сжатия контекста в SlidingWindowStrategy (режим A) и в варианте с тремя слоями и ручной раскладкой?",
+      "status": "unknown",
+      "reason": "model",
+      "answer": "Не знаю",
+      "sources": [],
+      "quotes": [],
+      "clarification": "Уточните, нужно ли сравнить значения input: 1114 токенов для режима A и 2370 токенов для режима B?",
+      "state_changes": {},
+      "usage": {
+        "prompt_tokens": 3090,
+        "completion_tokens": 445
+      },
+      "attempts": 1,
+      "top_score": 0.5337,
+      "gate": 0.4535,
+      "retrieval": {
+        "candidates": 12,
+        "after_filter": 12,
+        "final": 4,
+        "day_filter": "day11-",
+        "dialog_scope": 0
+      },
+      "rejected_quotes": 0,
+      "state": {
+        "goal": "цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки",
+        "constraints": [
+          "Бюджет на токены жёсткий; решение должно экономить токены"
+        ],
+        "terms": {
+          "факты": "Sticky Facts из дня 10"
+        },
+        "clarified": [],
+        "focus_days": [
+          11
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "right_source": false,
+        "status": false,
+        "type": true,
+        "goal_kept": true
+      },
+      "history_len": 22
+    },
+    {
+      "n": 12,
+      "user": "Подведи итог для коллеги в 3 пунктах с источниками.",
+      "type": "kb",
+      "query": "Подведи итог по дню 11 челленджа для выбора стратегии управления контекстом чат-бота поддержки при жёстком бюджете токенов: сравни SlidingWindowStrategy (режим A) и FactsStrategy/три слоя с ручной раскладкой, укажи по 3 ключевых пункта с источниками, включая количество токенов до и после сжатия, если эти данные есть.",
+      "status": "answered",
+      "reason": "",
+      "answer": "1. Режим A — только краткосрочная память с окном 4 реплики; режим B — три слоя с ручной раскладкой [3].\n2. В режиме A указано 52 токена краткосрочной памяти и input 1114; в режиме B — 53 краткосрочной, 56 рабочей, 59 долговременной и input 2370 [3]. Отдельных цифр «до/после сжатия» в данных нет.\n3. При жёстком бюджете токенов лучше выбрать режим A: режим B примерно вдвое дороже, хотя сохраняет начало диалога; компромисс режима A — забывание данных за пределами окна [3].",
+      "sources": [
+        {
+          "type": "kb",
+          "n": 3,
+          "source": "day11-memory-layers/README.md",
+          "section": "День 11. Модель памяти агента (memory layers) > Проверка: как слои влияют на ответы",
+          "chunk_id": "day11-memory-layers/README.md#structure-005",
+          "quoted": true
+        }
+      ],
+      "quotes": [
+        {
+          "n": 3,
+          "text": "- **A. Только краткосрочная** (окно 4 реплики) — всё, что вышло за окно, забыто.\n- **B. Три слоя, ручная раскладка** — данные разложены по слоям явно.",
+          "source": "day11-memory-layers/README.md",
+          "section": "День 11. Модель памяти агента (memory layers) > Проверка: как слои влияют на ответы"
+        },
+        {
+          "n": 3,
+          "text": "| A. Только краткосрочная | 52 | 0 | 0 | 1114 |\n| B. Три слоя, ручная раскладка | 53 | 56 | 59 | 2370 |",
+          "source": "day11-memory-layers/README.md",
+          "section": "День 11. Модель памяти агента (memory layers) > Проверка: как слои влияют на ответы"
+        },
+        {
+          "n": 3,
+          "text": "Видно главный компромисс: режим B дороже по токенам (~2х), потому что тащит в\nкаждый запрос блоки рабочей и долговременной памяти — но именно за счёт них он\nи способен ответить на вопросы про начало диалога.",
+          "source": "day11-memory-layers/README.md",
+          "section": "День 11. Модель памяти агента (memory layers) > Проверка: как слои влияют на ответы"
+        }
+      ],
+      "clarification": "",
+      "state_changes": {
+        "constraints_add": [
+          "Подвести итог для коллеги ровно в 3 пунктах",
+          "Указать источники"
+        ]
+      },
+      "usage": {
+        "prompt_tokens": 3724,
+        "completion_tokens": 1192
+      },
+      "attempts": 1,
+      "top_score": 0.6182,
+      "gate": 0.4535,
+      "weak_context": false,
+      "retrieval": {
+        "candidates": 12,
+        "after_filter": 12,
+        "final": 6,
+        "day_filter": null,
+        "dialog_scope": 3
+      },
+      "rejected_quotes": 0,
+      "state": {
+        "goal": "цель диалога — сравнить варианты из челленджа и выбрать один для управления контекстом чат-бота поддержки",
+        "constraints": [
+          "Бюджет на токены жёсткий; решение должно экономить токены",
+          "Подвести итог для коллеги ровно в 3 пунктах",
+          "Указать источники"
+        ],
+        "terms": {
+          "факты": "Sticky Facts из дня 10"
+        },
+        "clarified": [],
+        "focus_days": [
+          11
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      }
+    }
+  ]
+}

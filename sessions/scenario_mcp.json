@@ -1,0 +1,993 @@
+{
+  "saved": "2026-10-02T21:19:37",
+  "state": {
+    "goal": "цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа",
+    "constraints": [
+      "по возможности использовать решение без SDK, чтобы понять протокол напрямую"
+    ],
+    "terms": {
+      "инструмент": "MCP tool с JSON Schema параметров"
+    },
+    "clarified": [],
+    "focus_days": [
+      17
+    ],
+    "goal_history": [],
+    "rejected_goal_changes": 0
+  },
+  "history": [
+    {
+      "role": "user",
+      "content": "Цель: разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа."
+    },
+    {
+      "role": "assistant",
+      "content": "Зафиксировал в памяти задачи — цель: «цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа». Задавайте вопрос — отвечу по базе с источниками."
+    },
+    {
+      "role": "user",
+      "content": "С чего начать: как подключиться к готовому MCP-серверу и получить список инструментов?"
+    },
+    {
+      "role": "assistant",
+      "content": "Начните со скрипта `list_tools.py`: он подключается к MCP и выводит список инструментов. Для готового сервера используйте DeepWiki: `https://mcp.deepwiki.com/mcp`, транспорт `http`; ключи и регистрация не нужны [1][2]. Запустите `python list_tools.py --url https://mcp.deepwiki.com/mcp --transport http`. Скрипт покажет сведения о соединении и доступные инструменты; для DeepWiki ожидаются `read_wiki_structure`, `read_wiki_contents` и `ask_question` [3]."
+    },
+    {
+      "role": "user",
+      "content": "Почему в проекте дня 16 у DeepWiki не работал старый адрес?"
+    },
+    {
+      "role": "assistant",
+      "content": "Не знаю"
+    },
+    {
+      "role": "user",
+      "content": "Ограничение: по возможности без SDK — хочу понимать сам протокол."
+    },
+    {
+      "role": "assistant",
+      "content": "Зафиксировал в памяти задачи — ограничение: «по возможности использовать решение без SDK, чтобы понять протокол напрямую». Задавайте вопрос — отвечу по базе с источниками."
+    },
+    {
+      "role": "user",
+      "content": "Есть ли в проектах клиент без SDK?"
+    },
+    {
+      "role": "assistant",
+      "content": "Да. В проекте есть клиент без SDK — `list_tools_raw.py`: он подключается к MCP по JSON-RPC over HTTP, выполняет `initialize` и получает список инструментов через `list_tools()` [3]."
+    },
+    {
+      "role": "user",
+      "content": "Теперь как зарегистрировать свой инструмент на сервере?"
+    },
+    {
+      "role": "assistant",
+      "content": "Не знаю"
+    },
+    {
+      "role": "user",
+      "content": "Термин: «инструмент» — это MCP tool с JSON Schema параметров."
+    },
+    {
+      "role": "assistant",
+      "content": "Зафиксировал в памяти задачи — термин «инструмент» = MCP tool с JSON Schema параметров. Задавайте вопрос — отвечу по базе с источниками."
+    },
+    {
+      "role": "user",
+      "content": "Какие инструменты были в CRM-сервере из дня 17?"
+    },
+    {
+      "role": "assistant",
+      "content": "В CRM-сервере были реализованы инструменты `search_clients` и `get_client_orders` [3]."
+    },
+    {
+      "role": "user",
+      "content": "Как связать несколько инструментов в цепочку?"
+    },
+    {
+      "role": "assistant",
+      "content": "Цепочку связывает клиент или агент: сначала вызовите `search_clients`, извлеките `id` клиента из JSON-результата, затем передайте его как `client_id` в `get_client_orders`. В демо это описано как цепочка `search_clients -> get_client_orders`; агент выполняет вызовы через MCP и возвращает результат модели [2][4]."
+    },
+    {
+      "role": "user",
+      "content": "А если серверов несколько и у инструментов одинаковые имена?"
+    },
+    {
+      "role": "assistant",
+      "content": "Используйте составное имя `сервер__инструмент`, чтобы различать одинаковые имена, а маршрутизацию выполняйте через `Orchestrator.call`, который направляет вызов в нужную сессию [4]."
+    },
+    {
+      "role": "user",
+      "content": "Мы не ушли от цели? Напомни цель и что уже выяснили."
+    },
+    {
+      "role": "assistant",
+      "content": "Цель: цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа\nОграничения: по возможности использовать решение без SDK, чтобы понять протокол напрямую\nТермины: «инструмент» = MCP tool с JSON Schema параметров\nУже выяснили:\n  — Как подключиться к готовому MCP-серверу и получить список доступных инструментов для после\n  — Есть ли в проектах челленджа дня 16 MCP-клиент, реализованный без SDK, для подключения к M\n  — Какие MCP tools с JSON Schema параметров были реализованы в CRM-сервере из дня 17 челлендж\n  — Как в MCP-сервере без SDK связать несколько инструментов в цепочку, например инструменты C\n  — Как в MCP-клиенте или агенте различать и вызывать инструменты с одинаковыми именами, если "
+    },
+    {
+      "role": "user",
+      "content": "Какой рецепт борща?"
+    },
+    {
+      "role": "assistant",
+      "content": "Не знаю: вопрос не относится к базе и к цели диалога."
+    },
+    {
+      "role": "user",
+      "content": "Ок, вернёмся. Составь план из 4 шагов для моего MCP-сервера с источниками."
+    },
+    {
+      "role": "assistant",
+      "content": "1. Определите внешний API и инструменты: начните с mock CRM, затем создайте MCP-сервер, который регистрирует инструменты, описывает параметры и возвращает результаты [4].\n2. Подключите агент к серверу по MCP через stdio и реализуйте обмен: агент передаёт вопрос и список инструментов, сервер возвращает результат вызова [1].\n3. Проверьте протокол напрямую без LLM: подключитесь к серверу, получите список инструментов и их JSON Schema, вызовите инструменты и передайте результат первого вызова во второй [5].\n4. Подключите агент: преобразуйте инструменты в формат function calling, передайте их модели, выполняйте выбранный вызов через MCP и повторяйте цикл, пока модели нужны данные [2]."
+    }
+  ],
+  "turns": [
+    {
+      "n": 1,
+      "user": "Цель: разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа.",
+      "type": "statement",
+      "query": "Цель: разобраться, как создать собственный MCP-сервер и подключить его к агенту по материалам челленджа.",
+      "status": "answered",
+      "reason": "",
+      "answer": "Зафиксировал в памяти задачи — цель: «цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа». Задавайте вопрос — отвечу по базе с источниками.",
+      "sources": [
+        {
+          "type": "memory",
+          "source": "память задачи",
+          "section": "обновлена этой репликой",
+          "chunk_id": "task_state"
+        }
+      ],
+      "quotes": [],
+      "clarification": "",
+      "state_changes": {
+        "goal": "цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа"
+      },
+      "usage": {
+        "prompt_tokens": 590,
+        "completion_tokens": 122
+      },
+      "attempts": 0,
+      "state": {
+        "goal": "цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа",
+        "constraints": [],
+        "terms": {},
+        "clarified": [],
+        "focus_days": [],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "type": true,
+        "state": true,
+        "goal_kept": true
+      },
+      "history_len": 2
+    },
+    {
+      "n": 2,
+      "user": "С чего начать: как подключиться к готовому MCP-серверу и получить список инструментов?",
+      "type": "kb",
+      "query": "Как подключиться к готовому MCP-серверу и получить список доступных инструментов для последующего подключения MCP-сервера к агенту?",
+      "status": "answered",
+      "reason": "",
+      "answer": "Начните со скрипта `list_tools.py`: он подключается к MCP и выводит список инструментов. Для готового сервера используйте DeepWiki: `https://mcp.deepwiki.com/mcp`, транспорт `http`; ключи и регистрация не нужны [1][2]. Запустите `python list_tools.py --url https://mcp.deepwiki.com/mcp --transport http`. Скрипт покажет сведения о соединении и доступные инструменты; для DeepWiki ожидаются `read_wiki_structure`, `read_wiki_contents` и `ask_question` [3].",
+      "sources": [
+        {
+          "type": "kb",
+          "n": 1,
+          "source": "day16-mcp-connect/list_tools.py",
+          "section": "блок __main__",
+          "chunk_id": "day16-mcp-connect/list_tools.py#structure-005",
+          "quoted": true
+        },
+        {
+          "type": "kb",
+          "n": 2,
+          "source": "day16-mcp-connect/README.md",
+          "section": "День 16. Подключение MCP",
+          "chunk_id": "day16-mcp-connect/README.md#structure-000",
+          "quoted": true
+        },
+        {
+          "type": "kb",
+          "n": 3,
+          "source": "day16-mcp-connect/README.md",
+          "section": "День 16. Подключение MCP > Что должно получиться",
+          "chunk_id": "day16-mcp-connect/README.md#structure-004",
+          "quoted": true
+        }
+      ],
+      "quotes": [
+        {
+          "n": 1,
+          "text": "parser.add_argument(\"--url\", default=DEFAULT_URL, help=\"адрес MCP-сервера\")\n    parser.add_argument(\"--transport\", choices=[\"http\", \"sse\"], default=\"http\",",
+          "source": "day16-mcp-connect/list_tools.py",
+          "section": "блок __main__"
+        },
+        {
+          "n": 2,
+          "text": "Удалённый сервер — **DeepWiki** (`https://mcp.deepwiki.com/mcp`):\nпубличный, бесплатный, **без ключей и регистрации**.",
+          "source": "day16-mcp-connect/README.md",
+          "section": "День 16. Подключение MCP"
+        },
+        {
+          "n": 3,
+          "text": "Ожидаемый результат:\n\n- удалённый режим — 3 инструмента DeepWiki: `read_wiki_structure`,\n  `read_wiki_contents`, `ask_question`;",
+          "source": "day16-mcp-connect/README.md",
+          "section": "День 16. Подключение MCP > Что должно получиться"
+        }
+      ],
+      "clarification": "",
+      "state_changes": {},
+      "usage": {
+        "prompt_tokens": 2370,
+        "completion_tokens": 839
+      },
+      "attempts": 1,
+      "top_score": 0.6622,
+      "gate": 0.4535,
+      "retrieval": {
+        "candidates": 12,
+        "after_filter": 12,
+        "final": 4,
+        "day_filter": null,
+        "dialog_scope": 0
+      },
+      "rejected_quotes": 0,
+      "state": {
+        "goal": "цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа",
+        "constraints": [],
+        "terms": {},
+        "clarified": [],
+        "focus_days": [],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "right_source": true,
+        "status": true,
+        "type": true,
+        "goal_kept": true
+      },
+      "history_len": 4
+    },
+    {
+      "n": 3,
+      "user": "Почему в проекте дня 16 у DeepWiki не работал старый адрес?",
+      "type": "kb",
+      "query": "Почему в проекте дня 16 старый адрес DeepWiki не работал при подключении к MCP-серверу, какой адрес нужно использовать вместо него и что изменилось в конфигурации?",
+      "status": "unknown",
+      "reason": "model",
+      "answer": "Не знаю",
+      "sources": [],
+      "quotes": [],
+      "clarification": "Какая причина отказа старого адреса DeepWiki была указана в материалах проекта?",
+      "state_changes": {
+        "focus_days": [
+          16
+        ]
+      },
+      "usage": {
+        "prompt_tokens": 2790,
+        "completion_tokens": 314
+      },
+      "attempts": 1,
+      "top_score": 0.6005,
+      "gate": 0.4535,
+      "retrieval": {
+        "candidates": 12,
+        "after_filter": 12,
+        "final": 4,
+        "day_filter": "day16-",
+        "dialog_scope": 0
+      },
+      "rejected_quotes": 0,
+      "state": {
+        "goal": "цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа",
+        "constraints": [],
+        "terms": {},
+        "clarified": [],
+        "focus_days": [
+          16
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "right_source": false,
+        "status": false,
+        "type": true,
+        "goal_kept": true
+      },
+      "history_len": 6
+    },
+    {
+      "n": 4,
+      "user": "Ограничение: по возможности без SDK — хочу понимать сам протокол.",
+      "type": "statement",
+      "query": "Ограничение: по возможности изучать протокол MCP напрямую, без использования SDK.",
+      "status": "answered",
+      "reason": "",
+      "answer": "Зафиксировал в памяти задачи — ограничение: «по возможности использовать решение без SDK, чтобы понять протокол напрямую». Задавайте вопрос — отвечу по базе с источниками.",
+      "sources": [
+        {
+          "type": "memory",
+          "source": "память задачи",
+          "section": "обновлена этой репликой",
+          "chunk_id": "task_state"
+        }
+      ],
+      "quotes": [],
+      "clarification": "",
+      "state_changes": {
+        "constraints_add": [
+          "по возможности использовать решение без SDK, чтобы понять протокол напрямую"
+        ]
+      },
+      "usage": {
+        "prompt_tokens": 887,
+        "completion_tokens": 96
+      },
+      "attempts": 0,
+      "state": {
+        "goal": "цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа",
+        "constraints": [
+          "по возможности использовать решение без SDK, чтобы понять протокол напрямую"
+        ],
+        "terms": {},
+        "clarified": [],
+        "focus_days": [
+          16
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "type": true,
+        "state": true,
+        "goal_kept": true
+      },
+      "history_len": 8
+    },
+    {
+      "n": 5,
+      "user": "Есть ли в проектах клиент без SDK?",
+      "type": "kb",
+      "query": "Есть ли в проектах челленджа дня 16 MCP-клиент, реализованный без SDK, для подключения к MCP-серверу и получения списка инструментов?",
+      "status": "answered",
+      "reason": "",
+      "answer": "Да. В проекте есть клиент без SDK — `list_tools_raw.py`: он подключается к MCP по JSON-RPC over HTTP, выполняет `initialize` и получает список инструментов через `list_tools()` [3].",
+      "sources": [
+        {
+          "type": "kb",
+          "n": 3,
+          "source": "day16-mcp-connect/list_tools_raw.py",
+          "section": "def main + блок __main__",
+          "chunk_id": "day16-mcp-connect/list_tools_raw.py#structure-004",
+          "quoted": true
+        }
+      ],
+      "quotes": [
+        {
+          "n": 3,
+          "text": "parser = argparse.ArgumentParser(description=\"MCP tools/list без SDK\")",
+          "source": "day16-mcp-connect/list_tools_raw.py",
+          "section": "def main + блок __main__"
+        },
+        {
+          "n": 3,
+          "text": "print(f\"Подключаюсь к {args.url} (без SDK, JSON-RPC over HTTP) ...\")\n\n    try:\n        init = client.initialize()",
+          "source": "day16-mcp-connect/list_tools_raw.py",
+          "section": "def main + блок __main__"
+        },
+        {
+          "n": 3,
+          "text": "tools = client.list_tools()",
+          "source": "day16-mcp-connect/list_tools_raw.py",
+          "section": "def main + блок __main__"
+        }
+      ],
+      "clarification": "",
+      "state_changes": {},
+      "usage": {
+        "prompt_tokens": 2957,
+        "completion_tokens": 424
+      },
+      "attempts": 1,
+      "top_score": 0.6381,
+      "gate": 0.4535,
+      "retrieval": {
+        "candidates": 12,
+        "after_filter": 12,
+        "final": 4,
+        "day_filter": "day16-",
+        "dialog_scope": 0
+      },
+      "rejected_quotes": 0,
+      "state": {
+        "goal": "цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа",
+        "constraints": [
+          "по возможности использовать решение без SDK, чтобы понять протокол напрямую"
+        ],
+        "terms": {},
+        "clarified": [],
+        "focus_days": [
+          16
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "right_source": true,
+        "status": true,
+        "type": true,
+        "goal_kept": true
+      },
+      "history_len": 10
+    },
+    {
+      "n": 6,
+      "user": "Теперь как зарегистрировать свой инструмент на сервере?",
+      "type": "kb",
+      "query": "Как в проекте дня 16 зарегистрировать собственный инструмент на MCP-сервере без SDK, напрямую через протокол JSON-RPC over HTTP?",
+      "status": "unknown",
+      "reason": "model",
+      "answer": "Не знаю",
+      "sources": [],
+      "quotes": [],
+      "clarification": "Покажите фрагмент с реализацией MCP-сервера, например `local_server.py`, где объявляются инструменты и обрабатываются запросы `tools/list` или `tools/call`.",
+      "state_changes": {},
+      "usage": {
+        "prompt_tokens": 2847,
+        "completion_tokens": 228
+      },
+      "attempts": 1,
+      "top_score": 0.5908,
+      "gate": 0.4535,
+      "retrieval": {
+        "candidates": 12,
+        "after_filter": 12,
+        "final": 4,
+        "day_filter": "day16-",
+        "dialog_scope": 0
+      },
+      "rejected_quotes": 0,
+      "state": {
+        "goal": "цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа",
+        "constraints": [
+          "по возможности использовать решение без SDK, чтобы понять протокол напрямую"
+        ],
+        "terms": {},
+        "clarified": [],
+        "focus_days": [
+          16
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "right_source": false,
+        "status": false,
+        "type": true,
+        "goal_kept": true
+      },
+      "history_len": 12
+    },
+    {
+      "n": 7,
+      "user": "Термин: «инструмент» — это MCP tool с JSON Schema параметров.",
+      "type": "statement",
+      "query": "Пользователь уточняет, что под термином «инструмент» понимается MCP tool с JSON Schema параметров.",
+      "status": "answered",
+      "reason": "",
+      "answer": "Зафиксировал в памяти задачи — термин «инструмент» = MCP tool с JSON Schema параметров. Задавайте вопрос — отвечу по базе с источниками.",
+      "sources": [
+        {
+          "type": "memory",
+          "source": "память задачи",
+          "section": "обновлена этой репликой",
+          "chunk_id": "task_state"
+        }
+      ],
+      "quotes": [],
+      "clarification": "",
+      "state_changes": {
+        "terms_add": {
+          "инструмент": "MCP tool с JSON Schema параметров"
+        }
+      },
+      "usage": {
+        "prompt_tokens": 813,
+        "completion_tokens": 100
+      },
+      "attempts": 0,
+      "state": {
+        "goal": "цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа",
+        "constraints": [
+          "по возможности использовать решение без SDK, чтобы понять протокол напрямую"
+        ],
+        "terms": {
+          "инструмент": "MCP tool с JSON Schema параметров"
+        },
+        "clarified": [],
+        "focus_days": [
+          16
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "type": true,
+        "state": true,
+        "goal_kept": true
+      },
+      "history_len": 14
+    },
+    {
+      "n": 8,
+      "user": "Какие инструменты были в CRM-сервере из дня 17?",
+      "type": "kb",
+      "query": "Какие MCP tools с JSON Schema параметров были реализованы в CRM-сервере из дня 17 челленджа?",
+      "status": "answered",
+      "reason": "",
+      "answer": "В CRM-сервере были реализованы инструменты `search_clients` и `get_client_orders` [3].",
+      "sources": [
+        {
+          "type": "kb",
+          "n": 3,
+          "source": "day17-mcp-tool/README.md",
+          "section": "День 17. Первый инструмент MCP > Проверка ТЗ + День 17. Первый инструмент MCP > Как заменить mock на настоящий API",
+          "chunk_id": "day17-mcp-tool/README.md#structure-005",
+          "quoted": true
+        }
+      ],
+      "quotes": [
+        {
+          "n": 3,
+          "text": "Получить и использовать результат | id из `search_clients` передаётся в `get_client_orders`; LLM отвечает цифрами из CRM",
+          "source": "day17-mcp-tool/README.md",
+          "section": "День 17. Первый инструмент MCP > Проверка ТЗ + День 17. Первый инструмент MCP > Как заменить mock на настоящий API"
+        }
+      ],
+      "clarification": "",
+      "state_changes": {
+        "focus_days": [
+          17
+        ]
+      },
+      "usage": {
+        "prompt_tokens": 2557,
+        "completion_tokens": 407
+      },
+      "attempts": 1,
+      "top_score": 0.6226,
+      "gate": 0.4535,
+      "retrieval": {
+        "candidates": 12,
+        "after_filter": 12,
+        "final": 4,
+        "day_filter": "day17-",
+        "dialog_scope": 0
+      },
+      "rejected_quotes": 0,
+      "state": {
+        "goal": "цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа",
+        "constraints": [
+          "по возможности использовать решение без SDK, чтобы понять протокол напрямую"
+        ],
+        "terms": {
+          "инструмент": "MCP tool с JSON Schema параметров"
+        },
+        "clarified": [],
+        "focus_days": [
+          17
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "right_source": true,
+        "status": true,
+        "type": true,
+        "goal_kept": true
+      },
+      "history_len": 16
+    },
+    {
+      "n": 9,
+      "user": "Как связать несколько инструментов в цепочку?",
+      "type": "kb",
+      "query": "Как в MCP-сервере без SDK связать несколько инструментов в цепочку, например инструменты CRM-сервера из дня 17 search_clients и get_client_orders, и передавать результат одного инструмента в параметры другого?",
+      "status": "answered",
+      "reason": "",
+      "answer": "Цепочку связывает клиент или агент: сначала вызовите `search_clients`, извлеките `id` клиента из JSON-результата, затем передайте его как `client_id` в `get_client_orders`. В демо это описано как цепочка `search_clients -> get_client_orders`; агент выполняет вызовы через MCP и возвращает результат модели [2][4].",
+      "sources": [
+        {
+          "type": "kb",
+          "n": 2,
+          "source": "day17-mcp-tool/demo_call.py",
+          "section": "шапка модуля: docstring и импорты",
+          "chunk_id": "day17-mcp-tool/demo_call.py#structure-000",
+          "quoted": true
+        },
+        {
+          "type": "kb",
+          "n": 4,
+          "source": "day17-mcp-tool/agent.py",
+          "section": "шапка модуля: docstring и импорты + константа MODEL + константа BASE_URL + константа MAX_TOOL_STEPS",
+          "chunk_id": "day17-mcp-tool/agent.py#structure-000",
+          "quoted": true
+        }
+      ],
+      "quotes": [
+        {
+          "n": 2,
+          "text": "id из первого вызова передаётся во второй — цепочка search_clients -> get_client_orders;",
+          "source": "day17-mcp-tool/demo_call.py",
+          "section": "шапка модуля: docstring и импорты"
+        },
+        {
+          "n": 4,
+          "text": "агент выполняет вызов ЧЕРЕЗ MCP (session.call_tool) и возвращает результат модели;",
+          "source": "day17-mcp-tool/agent.py",
+          "section": "шапка модуля: docstring и импорты + константа MODEL + константа BASE_URL + константа MAX_TOOL_STEPS"
+        }
+      ],
+      "clarification": "",
+      "state_changes": {},
+      "usage": {
+        "prompt_tokens": 2530,
+        "completion_tokens": 475
+      },
+      "attempts": 1,
+      "top_score": 0.6537,
+      "gate": 0.4535,
+      "retrieval": {
+        "candidates": 12,
+        "after_filter": 12,
+        "final": 4,
+        "day_filter": "day17-",
+        "dialog_scope": 0
+      },
+      "rejected_quotes": 0,
+      "state": {
+        "goal": "цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа",
+        "constraints": [
+          "по возможности использовать решение без SDK, чтобы понять протокол напрямую"
+        ],
+        "terms": {
+          "инструмент": "MCP tool с JSON Schema параметров"
+        },
+        "clarified": [],
+        "focus_days": [
+          17
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "right_source": false,
+        "status": true,
+        "type": true,
+        "goal_kept": true
+      },
+      "history_len": 18
+    },
+    {
+      "n": 10,
+      "user": "А если серверов несколько и у инструментов одинаковые имена?",
+      "type": "kb",
+      "query": "Как в MCP-клиенте или агенте различать и вызывать инструменты с одинаковыми именами, если они предоставляются несколькими MCP-серверами, и как организовать маршрутизацию таких вызовов?",
+      "status": "answered",
+      "reason": "",
+      "answer": "Используйте составное имя `сервер__инструмент`, чтобы различать одинаковые имена, а маршрутизацию выполняйте через `Orchestrator.call`, который направляет вызов в нужную сессию [4].",
+      "sources": [
+        {
+          "type": "kb",
+          "n": 4,
+          "source": "day20-mcp-orchestration/README.md",
+          "section": "День 20. Orchestration MCP > Проверка ТЗ",
+          "chunk_id": "day20-mcp-orchestration/README.md#structure-006",
+          "quoted": true
+        }
+      ],
+      "quotes": [
+        {
+          "n": 4,
+          "text": "Корректно маршрутизирует запросы | `Orchestrator.call`: `сервер__инструмент` → нужная сессия",
+          "source": "day20-mcp-orchestration/README.md",
+          "section": "День 20. Orchestration MCP > Проверка ТЗ"
+        }
+      ],
+      "clarification": "",
+      "state_changes": {},
+      "usage": {
+        "prompt_tokens": 2580,
+        "completion_tokens": 384
+      },
+      "attempts": 1,
+      "top_score": 0.6622,
+      "gate": 0.4535,
+      "retrieval": {
+        "candidates": 12,
+        "after_filter": 12,
+        "final": 4,
+        "day_filter": null,
+        "dialog_scope": 0
+      },
+      "rejected_quotes": 0,
+      "state": {
+        "goal": "цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа",
+        "constraints": [
+          "по возможности использовать решение без SDK, чтобы понять протокол напрямую"
+        ],
+        "terms": {
+          "инструмент": "MCP tool с JSON Schema параметров"
+        },
+        "clarified": [],
+        "focus_days": [
+          17
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "right_source": true,
+        "status": true,
+        "type": true,
+        "goal_kept": true
+      },
+      "history_len": 20
+    },
+    {
+      "n": 11,
+      "user": "Мы не ушли от цели? Напомни цель и что уже выяснили.",
+      "type": "memory",
+      "query": "Какая цель диалога и что уже выяснили о создании собственного MCP-сервера и подключении его к агенту по материалам челленджа, включая инструменты CRM-сервера дня 17, цепочку вызовов search_clients -> get_client_orders и маршрутизацию одинаково названных инструментов через server__tool и Orchestrator.call?",
+      "status": "answered",
+      "reason": "",
+      "answer": "Цель: цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа\nОграничения: по возможности использовать решение без SDK, чтобы понять протокол напрямую\nТермины: «инструмент» = MCP tool с JSON Schema параметров\nУже выяснили:\n  — Как подключиться к готовому MCP-серверу и получить список доступных инструментов для после\n  — Есть ли в проектах челленджа дня 16 MCP-клиент, реализованный без SDK, для подключения к M\n  — Какие MCP tools с JSON Schema параметров были реализованы в CRM-сервере из дня 17 челлендж\n  — Как в MCP-сервере без SDK связать несколько инструментов в цепочку, например инструменты C\n  — Как в MCP-клиенте или агенте различать и вызывать инструменты с одинаковыми именами, если ",
+      "sources": [
+        {
+          "type": "memory",
+          "source": "память задачи",
+          "section": "цель, ограничения, термины",
+          "chunk_id": "task_state"
+        },
+        {
+          "type": "history",
+          "source": "day16-mcp-connect/list_tools.py",
+          "section": "блок __main__",
+          "chunk_id": "day16-mcp-connect/list_tools.py#structure-005",
+          "turn": 2
+        },
+        {
+          "type": "history",
+          "source": "day16-mcp-connect/README.md",
+          "section": "День 16. Подключение MCP",
+          "chunk_id": "day16-mcp-connect/README.md#structure-000",
+          "turn": 2
+        },
+        {
+          "type": "history",
+          "source": "day16-mcp-connect/list_tools_raw.py",
+          "section": "def main + блок __main__",
+          "chunk_id": "day16-mcp-connect/list_tools_raw.py#structure-004",
+          "turn": 5
+        },
+        {
+          "type": "history",
+          "source": "day17-mcp-tool/README.md",
+          "section": "День 17. Первый инструмент MCP > Проверка ТЗ + День 17. Первый инструмент MCP > Как заменить mock на настоящий API",
+          "chunk_id": "day17-mcp-tool/README.md#structure-005",
+          "turn": 8
+        },
+        {
+          "type": "history",
+          "source": "day17-mcp-tool/demo_call.py",
+          "section": "шапка модуля: docstring и импорты",
+          "chunk_id": "day17-mcp-tool/demo_call.py#structure-000",
+          "turn": 9
+        },
+        {
+          "type": "history",
+          "source": "day17-mcp-tool/agent.py",
+          "section": "шапка модуля: docstring и импорты + константа MODEL + константа BASE_URL + константа MAX_TOOL_STEPS",
+          "chunk_id": "day17-mcp-tool/agent.py#structure-000",
+          "turn": 9
+        },
+        {
+          "type": "history",
+          "source": "day20-mcp-orchestration/README.md",
+          "section": "День 20. Orchestration MCP > Проверка ТЗ",
+          "chunk_id": "day20-mcp-orchestration/README.md#structure-006",
+          "turn": 10
+        }
+      ],
+      "quotes": [],
+      "clarification": "",
+      "state_changes": {},
+      "usage": {
+        "prompt_tokens": 962,
+        "completion_tokens": 176
+      },
+      "attempts": 0,
+      "state": {
+        "goal": "цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа",
+        "constraints": [
+          "по возможности использовать решение без SDK, чтобы понять протокол напрямую"
+        ],
+        "terms": {
+          "инструмент": "MCP tool с JSON Schema параметров"
+        },
+        "clarified": [],
+        "focus_days": [
+          17
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "status": true,
+        "type": true,
+        "answer": true,
+        "goal_kept": true
+      },
+      "history_len": 22
+    },
+    {
+      "n": 12,
+      "user": "Какой рецепт борща?",
+      "type": "offtopic",
+      "query": "Какой рецепт борща?",
+      "status": "unknown",
+      "reason": "offtopic",
+      "answer": "Не знаю: вопрос не относится к базе и к цели диалога.",
+      "sources": [],
+      "quotes": [],
+      "clarification": "Вернёмся к цели: «цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа»? Спросите, что из неё разобрать дальше.",
+      "state_changes": {},
+      "usage": {
+        "prompt_tokens": 1146,
+        "completion_tokens": 70
+      },
+      "attempts": 0,
+      "state": {
+        "goal": "цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа",
+        "constraints": [
+          "по возможности использовать решение без SDK, чтобы понять протокол напрямую"
+        ],
+        "terms": {
+          "инструмент": "MCP tool с JSON Schema параметров"
+        },
+        "clarified": [],
+        "focus_days": [
+          17
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      },
+      "checks": {
+        "sources_shown": true,
+        "status": true,
+        "type": true,
+        "goal_kept": true
+      },
+      "history_len": 24
+    },
+    {
+      "n": 13,
+      "user": "Ок, вернёмся. Составь план из 4 шагов для моего MCP-сервера с источниками.",
+      "type": "kb",
+      "query": "По материалам дня 17 челленджа составьте план из 4 шагов по созданию собственного MCP-сервера и его подключению к агенту, по возможности без SDK для понимания протокола напрямую; укажите источники для каждого шага.",
+      "status": "answered",
+      "reason": "",
+      "answer": "1. Определите внешний API и инструменты: начните с mock CRM, затем создайте MCP-сервер, который регистрирует инструменты, описывает параметры и возвращает результаты [4].\n2. Подключите агент к серверу по MCP через stdio и реализуйте обмен: агент передаёт вопрос и список инструментов, сервер возвращает результат вызова [1].\n3. Проверьте протокол напрямую без LLM: подключитесь к серверу, получите список инструментов и их JSON Schema, вызовите инструменты и передайте результат первого вызова во второй [5].\n4. Подключите агент: преобразуйте инструменты в формат function calling, передайте их модели, выполняйте выбранный вызов через MCP и повторяйте цикл, пока модели нужны данные [2].",
+      "sources": [
+        {
+          "type": "kb",
+          "n": 1,
+          "source": "day17-mcp-tool/README.md",
+          "section": "День 17. Первый инструмент MCP + День 17. Первый инструмент MCP > Архитектура",
+          "chunk_id": "day17-mcp-tool/README.md#structure-000",
+          "quoted": true
+        },
+        {
+          "type": "kb",
+          "n": 2,
+          "source": "day17-mcp-tool/agent.py",
+          "section": "шапка модуля: docstring и импорты + константа MODEL + константа BASE_URL + константа MAX_TOOL_STEPS",
+          "chunk_id": "day17-mcp-tool/agent.py#structure-000",
+          "quoted": true
+        },
+        {
+          "type": "kb",
+          "n": 4,
+          "source": "day17-mcp-tool/README.md",
+          "section": "День 17. Первый инструмент MCP > Файлы",
+          "chunk_id": "day17-mcp-tool/README.md#structure-001",
+          "quoted": true
+        },
+        {
+          "type": "kb",
+          "n": 5,
+          "source": "day17-mcp-tool/demo_call.py",
+          "section": "шапка модуля: docstring и импорты",
+          "chunk_id": "day17-mcp-tool/demo_call.py#structure-000",
+          "quoted": true
+        }
+      ],
+      "quotes": [
+        {
+          "n": 4,
+          "text": "`mcp_server.py` | **MCP-сервер**: регистрирует 3 инструмента, описывает параметры, возвращает результат",
+          "source": "day17-mcp-tool/README.md",
+          "section": "День 17. Первый инструмент MCP > Файлы"
+        },
+        {
+          "n": 1,
+          "text": "├──(MCP, stdio)──► mcp_server.py ──► crm_api.py (mock CRM)",
+          "source": "day17-mcp-tool/README.md",
+          "section": "День 17. Первый инструмент MCP + День 17. Первый инструмент MCP > Архитектура"
+        },
+        {
+          "n": 5,
+          "text": "1) подключение к своему MCP-серверу;\n  2) список зарегистрированных инструментов и их входные параметры\n     (то, что сервер описал через JSON Schema);",
+          "source": "day17-mcp-tool/demo_call.py",
+          "section": "шапка модуля: docstring и импорты"
+        },
+        {
+          "n": 2,
+          "text": "1) агент запускает свой MCP-сервер и получает список инструментов;\n  2) переводит их в формат function calling и передаёт модели (AITunnel);\n  3) модель решает, какой инструмент вызвать и с какими аргументами;\n  4) агент выполняет вызов ЧЕРЕЗ MCP (session.call_tool) и возвращает\n     результат модели;",
+          "source": "day17-mcp-tool/agent.py",
+          "section": "шапка модуля: docstring и импорты + константа MODEL + константа BASE_URL + константа MAX_TOOL_STEPS"
+        }
+      ],
+      "clarification": "",
+      "state_changes": {},
+      "usage": {
+        "prompt_tokens": 3207,
+        "completion_tokens": 1000
+      },
+      "attempts": 1,
+      "top_score": 0.586,
+      "gate": 0.4535,
+      "weak_context": false,
+      "retrieval": {
+        "candidates": 12,
+        "after_filter": 12,
+        "final": 6,
+        "day_filter": "day17-",
+        "dialog_scope": 7
+      },
+      "rejected_quotes": 0,
+      "state": {
+        "goal": "цель диалога — разобраться, как сделать свой MCP-сервер и подключить его к агенту, по материалам челленджа",
+        "constraints": [
+          "по возможности использовать решение без SDK, чтобы понять протокол напрямую"
+        ],
+        "terms": {
+          "инструмент": "MCP tool с JSON Schema параметров"
+        },
+        "clarified": [],
+        "focus_days": [
+          17
+        ],
+        "goal_history": [],
+        "rejected_goal_changes": 0
+      }
+    }
+  ]
+}
